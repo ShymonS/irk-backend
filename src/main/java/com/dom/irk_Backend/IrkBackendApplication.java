@@ -14,22 +14,4 @@ public class IrkBackendApplication {
         SpringApplication.run(IrkBackendApplication.class, args);
     }
 
-    @Bean
-    CommandLineRunner runner(CandidateRepository candidateRepository) {
-        return args -> {
-            if (candidateRepository.count() == 0) {
-                Candidate candidateTestowy = new Candidate();
-                candidateTestowy.setFirstName("Jan");
-                candidateTestowy.setLastName("Kowalski");
-                candidateTestowy.setEmail("testowy@mail.com");
-                candidateTestowy.setPhoneNumber("213253132");
-
-                candidateRepository.save(candidateTestowy);
-
-                System.out.println("Zapisano pierwszego kandydata do bazy");
-            } else {
-                System.out.println("Baza ma już dane, nie testuje.");
-            }
-        };
-    }
 }
