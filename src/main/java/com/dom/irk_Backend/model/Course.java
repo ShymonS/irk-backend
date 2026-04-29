@@ -20,6 +20,6 @@ public class Course {
 
     // Klucz obcy
     @ManyToOne
-    @JoinColumn(name = "recruitment_id", nullable = false)
+    @JoinColumn(name = "recruitment_id", nullable = true)
     private Recruitment recruitment;
 }
