@@ -4,6 +4,8 @@ import com.dom.irk_Backend.model.Course;
 import com.dom.irk_Backend.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CourseService {
 
@@ -22,5 +24,17 @@ public class CourseService {
             return courseRepository.save(existingCourse);
 
         }).orElseThrow(() -> new RuntimeException("Nie znaleziono kierunku o ID: " + id));
+    }
+
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
+    }
+
+    public void deleteCourse(Integer id) {
+        courseRepository.deleteById(id);
+    }
+
+    public Course createCourse(Course course) {
+        return courseRepository.save(course);
     }
 }
