@@ -46,8 +46,7 @@ public class RecruitmentService {
 
         Recruitment savedRecruitment = recruitmentRepository.save(recruitment);
 
-        // --- GWARANCJA MAX 1 KIERUNKU ---
-        // 1. Zdejmujemy tę rekrutację ze WSZYSTKICH kierunków, które ją obecnie mają
+        // 1. Zdejmujemy tę rekrutację z kierunków
         List<Course> allCourses = courseRepository.findAll();
         for (Course c : allCourses) {
             if (c.getRecruitment() != null && c.getRecruitment().getId().equals(savedRecruitment.getId())) {
@@ -56,7 +55,7 @@ public class RecruitmentService {
             }
         }
 
-        // 2. Przypisujemy nowy kierunek (jeśli jakiś został przesłany)
+        // 2. Przypisujemy nowy kierunek
         if (request.getCourseId() != null) {
             Course newCourse = courseRepository.findById(request.getCourseId())
                     .orElseThrow(() -> new RuntimeException("Nie znaleziono kierunku"));

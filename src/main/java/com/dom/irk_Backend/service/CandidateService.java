@@ -43,7 +43,7 @@ public class CandidateService {
             throw new IllegalArgumentException("Hasło musi mieć co najmniej 6 znaków.");
         }
 
-        // Sprawdzenie formatu email (proste wyrażenie regularne)
+        // Sprawdzenie formatu email
         if (candidate.getEmail() == null || !candidate.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new IllegalArgumentException("Niepoprawny format adresu email.");
         }
