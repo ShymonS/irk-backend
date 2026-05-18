@@ -8,6 +8,11 @@ import com.dom.irk_Backend.repository.CandidateResultRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class CandidateResultService {
 
@@ -91,5 +96,43 @@ public class CandidateResultService {
                     "Nieprawidłowa ocena! Ocena ze świadectwa z przedmiotu '" + subject + "' musi być w przedziale 2-6. Przesłano: " + grade
             );
         }
+    }
+
+    public FullProfileRequest getMyProfile(String email) {
+        Candidate candidate = candidateRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono kandydata"));
+
+        List<CandidateResult> rawResults = resultRepository.findByCandidateId(candidate.getId());
+
+        FullProfileRequest response = new FullProfileRequest();
+        Map<String, Integer> mandatory = new HashMap<>();
+        List<FullProfileRequest.SubjectScore> extended = new ArrayList<>();
+        List<FullProfileRequest.SubjectScore> grades = new ArrayList<>();
+
+        for (CandidateResult r : rawResults) {
+            String name = r.getSubjectName();
+
+            if (name.endsWith("(Podstawa)")) {
+                mandatory.put(name.replace(" (Podstawa)", ""), r.getScore());
+
+            } else if (name.endsWith("(Rozszerzenie)")) {
+                FullProfileRequest.SubjectScore ss = new FullProfileRequest.SubjectScore();
+                ss.setSubject(name.replace(" (Rozszerzenie)", ""));
+                ss.setValue(r.getScore());
+                extended.add(ss);
+
+            } else if (name.startsWith("Ocena końcowa: ")) {
+                FullProfileRequest.SubjectScore ss = new FullProfileRequest.SubjectScore();
+                ss.setSubject(name.replace("Ocena końcowa: ", ""));
+                ss.setValue(r.getScore());
+                grades.add(ss);
+            }
+        }
+
+        response.setMandatory(mandatory);
+        response.setExtended(extended);
+        response.setGrades(grades);
+
+        return response;
     }
 }

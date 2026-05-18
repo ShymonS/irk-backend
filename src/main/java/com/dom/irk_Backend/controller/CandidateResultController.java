@@ -33,4 +33,18 @@ public class CandidateResultController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Błąd: " + e.getMessage());
         }
     }
+
+    @GetMapping("/my")
+    public ResponseEntity<?> getMyResults() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String email = auth.getName();
+
+            FullProfileRequest myProfile = resultService.getMyProfile(email);
+            return ResponseEntity.ok(myProfile);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Błąd: " + e.getMessage());
+        }
+    }
 }
