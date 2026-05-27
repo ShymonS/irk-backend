@@ -25,6 +25,12 @@ public class Application {
     @Column(nullable = false)
     private String status;
 
+    @Column
+    private Integer points;
+
+    @Column
+    private Integer priority;
+
     @Column(nullable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
