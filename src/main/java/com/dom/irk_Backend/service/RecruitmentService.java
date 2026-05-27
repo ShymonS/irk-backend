@@ -39,31 +39,23 @@ public class RecruitmentService {
             recruitment = new Recruitment();
         }
 
+        // 1. Ustawiamy pola
         recruitment.setName(request.getName());
         recruitment.setStartDate(request.getStartDate());
         recruitment.setEndDate(request.getEndDate());
         recruitment.setIsActive(request.getIsActive() != null ? request.getIsActive() : false);
 
-        Recruitment savedRecruitment = recruitmentRepository.save(recruitment);
-
-        // 1. Zdejmujemy tę rekrutację z kierunków
-        List<Course> allCourses = courseRepository.findAll();
-        for (Course c : allCourses) {
-            if (c.getRecruitment() != null && c.getRecruitment().getId().equals(savedRecruitment.getId())) {
-                c.setRecruitment(null);
-                courseRepository.save(c);
-            }
-        }
-
-        // 2. Przypisujemy nowy kierunek
+        // 2. Ustawiamy relację (kurs)
         if (request.getCourseId() != null) {
-            Course newCourse = courseRepository.findById(request.getCourseId())
+            Course course = courseRepository.findById(request.getCourseId())
                     .orElseThrow(() -> new RuntimeException("Nie znaleziono kierunku"));
-            newCourse.setRecruitment(savedRecruitment);
-            courseRepository.save(newCourse);
+            recruitment.setCourse(course);
+        } else {
+            recruitment.setCourse(null);
         }
 
-        return savedRecruitment;
+        // 3. Zapisujemy zaktualizowany obiekt do bazy
+        return recruitmentRepository.save(recruitment);
     }
 
     public void deleteRecruitment(Integer id) {

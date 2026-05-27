@@ -1,6 +1,7 @@
 package com.dom.irk_Backend.service;
 
 import com.dom.irk_Backend.model.Course;
+import com.dom.irk_Backend.model.CourseRequirement;
 import com.dom.irk_Backend.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,11 @@ public class CourseService {
 
     public Course createCourse(Course course) {
         validateCourse(course, null);
+        if (course.getRequirements() != null) {
+            for (CourseRequirement req : course.getRequirements()) {
+                req.setCourse(course);
+            }
+        }
         return courseRepository.save(course);
     }
 
@@ -27,6 +33,17 @@ public class CourseService {
         return courseRepository.findById(id).map(existingCourse -> {
             existingCourse.setName(updatedData.getName());
             existingCourse.setPlacesLimit(updatedData.getPlacesLimit());
+            if (existingCourse.getRequirements() != null) {
+                existingCourse.getRequirements().clear();
+            }
+
+            if (updatedData.getRequirements() != null) {
+                for (CourseRequirement req : updatedData.getRequirements()) {
+                    req.setId(null);
+                    req.setCourse(existingCourse);
+                    existingCourse.getRequirements().add(req);
+                }
+            }
             return courseRepository.save(existingCourse);
         }).orElseThrow(() -> new RuntimeException("Nie znaleziono kierunku o ID: " + id));
     }

@@ -3,6 +3,8 @@ package com.dom.irk_Backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "courses")
@@ -18,8 +20,6 @@ public class Course {
     @Column (nullable = false)
     private Integer placesLimit;
 
-    // Klucz obcy
-    @ManyToOne
-    @JoinColumn(name = "recruitment_id", nullable = true)
-    private Recruitment recruitment;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourseRequirement> requirements;
 }

@@ -24,4 +24,8 @@ public class Recruitment {
 
     @Column
     private Boolean isActive;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = true)
+    private Course course;
 }
