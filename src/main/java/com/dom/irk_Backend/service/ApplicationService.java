@@ -97,6 +97,44 @@ public class ApplicationService {
         return applicationRepository.save(application);
     }
 
+    public void processRecruitmentResults(Integer recruitmentId) {
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono rekrutacji."));
+
+        Course course = recruitment.getCourse();
+        if (course == null || course.getPlacesLimit() == null) {
+            throw new IllegalStateException("Rekrutacja nie ma przypisanego kierunku lub limitu miejsc.");
+        }
+
+        int limit = course.getPlacesLimit();
+
+        // 1. Pobieramy wszystkie aplikacje dla tej rekrutacji
+        List<Application> applications = applicationRepository.findByRecruitmentId(recruitmentId);
+
+        if (!applications.isEmpty()) {
+            // 2. Sortujemy kandydatów malejące po punktach
+            applications.sort((a1, a2) -> Integer.compare(a2.getPoints(), a1.getPoints()));
+
+            // 3. Rozdajemy statusy na podstawie limitu miejsc
+            for (int i = 0; i < applications.size(); i++) {
+                Application app = applications.get(i);
+
+                // Jeśli indeks kandydata jest mniejszy niż limit -> Zakwalifikowany
+                if (i < limit) {
+                    app.setStatus("ZAKWALIFIKOWANY");
+                } else {
+                    app.setStatus("LISTA REZERWOWA");
+                }
+            }
+            // Zapisujemy zaktualizowane statusy kandydatów
+            applicationRepository.saveAll(applications);
+        }
+
+        // 4. Wyłączamy rekrutację, żeby zniknęła z otwartych i nie przeliczała się ponownie
+        recruitment.setIsActive(false);
+        recruitmentRepository.save(recruitment);
+    }
+
     public List<Application> getApplicationsForRecruitment(Integer recruitmentId) {
         return applicationRepository.findByRecruitmentId(recruitmentId);
     }
