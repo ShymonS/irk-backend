@@ -36,6 +36,9 @@ public class Candidate {
     @org.hibernate.annotations.CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(50) DEFAULT 'CANDIDATE'")
+    private String role = "CANDIDATE";
+
     public String getFirstName() {
         return firstName;
     }

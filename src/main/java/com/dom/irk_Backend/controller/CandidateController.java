@@ -2,6 +2,7 @@ package com.dom.irk_Backend.controller;
 
 import com.dom.irk_Backend.model.Candidate;
 import com.dom.irk_Backend.model.LoginRequest;
+import com.dom.irk_Backend.model.UpdateRoleRequest;
 import com.dom.irk_Backend.service.CandidateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -64,6 +66,22 @@ public class CandidateController {
         } else {
             System.out.println("Błąd logowania, złe dane.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Błędny email lub hasło");
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Candidate>> getAllCandidates() {
+        List<Candidate> candidates = candidateService.getAllCandidates();
+        return ResponseEntity.ok(candidates);
+    }
+
+    @PutMapping("/{id}/role")
+    public ResponseEntity<?> updateRole(@PathVariable Integer id, @RequestBody UpdateRoleRequest request) {
+        try {
+            Candidate updated = candidateService.updateRole(id, request.getRole());
+            return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

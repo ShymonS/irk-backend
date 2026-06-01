@@ -5,7 +5,9 @@ import com.dom.irk_Backend.repository.CandidateRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CandidateService {
@@ -70,5 +72,27 @@ public class CandidateService {
 
     public boolean emailExists(String email) {
         return candidateRepository.findByEmail(email).isPresent();
+    }
+
+    public List<Candidate> getAllCandidates() {
+        return candidateRepository.findAll();
+    }
+
+    public Candidate updateRole(Integer candidateId, String newRole) {
+        // Dozwolone role w systemie
+        Set<String> allowedRoles = Set.of("CANDIDATE", "ADMIN");
+
+        if (newRole == null || newRole.trim().isEmpty()) {
+            throw new IllegalArgumentException("Rola nie może być pusta.");
+        }
+        if (!allowedRoles.contains(newRole.toUpperCase())) {
+            throw new IllegalArgumentException("Niedozwolona rola: " + newRole + ". Dozwolone: " + allowedRoles);
+        }
+
+        Candidate candidate = candidateRepository.findById(candidateId)
+                .orElseThrow(() -> new IllegalArgumentException("Kandydat o ID " + candidateId + " nie istnieje."));
+
+        candidate.setRole(newRole.toUpperCase());
+        return candidateRepository.save(candidate);
     }
 }

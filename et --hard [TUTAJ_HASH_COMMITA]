@@ -1,0 +1,36 @@
+[33mb7eca6a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #12 from Witos22/feature/witold
+[33m6019513[m[33m ([m[1;31morigin/feature/witold[m[33m, [m[1;32mfeature/witold[m[33m)[m formularz_kursów_endp
+[33mc8e259a[m Merge pull request #11 from ShymonS/main
+[33m7687bb4[m Obsługa zapisu wyników po stronie backend
+[33m2870c9d[m[33m ([m[1;32mfeature/walidacja_danych_z_formularza[m[33m)[m Merge pull request #10 from ShymonS/fix/oferta_edukacyjna
+[33me571ef8[m fix - oferta edukacyjna
+[33m408d5eb[m Merge pull request #9 from ShymonS/feature/oferta_edukacyjna
+[33m1f92b80[m Merge pull request #8 from ShymonS/main
+[33m1984515[m Endpoint edycji kursów
+[33m92fa3c7[m Fix - sesja
+[33m929a698[m Delete .github/workflows/ci.yml
+[33m6bfbcf1[m Update build.yml
+[33mda4fd38[m Update build.yml
+[33mb9caa43[m Update build.yml
+[33maa773e2[m Update build.yml
+[33mecb9bf7[m Update ci.yml
+[33mb5bf0e0[m Update ci.yml
+[33m2e07e64[m Create build.yml
+[33m6f09132[m Create ci.yml
+[33macdd159[m Merge pull request #7 from ShymonS/feature/rejestracja_informacja_zwrotna
+[33m1308cf6[m Merge pull request #6 from ShymonS/feature/admin_dashboard
+[33m73be163[m informacja zwrotna rejestracji
+[33m28e0cce[m Admin_Logowanie
+[33mb3413df[m Walidacja emailu i hasła
+[33m4e9e42c[m Merge pull request #5 from Witos22/feature/testowanie_komunikacji
+[33mc4ba8f7[m ..
+[33m7056745[m Testowanie komunikacji/ naprawianie
+[33m0cc1f53[m Merge pull request #4 from Witos22/feature/logowanie_kandydata
+[33mfa7b29e[m Dodanie serwisu i kontrolera dla kandydata
+[33mbedba92[m Merge pull request #3 from Witos22/feature/dodanie_tabel_i_relacji
+[33m02e79b6[m Dodanie pozostałych 5 tabel i ich repozytoriów
+[33m732f9ee[m Merge pull request #2 from Witos22/feature/stworzenie_bazy_tabel
+[33mef0ad8b[m Dodanie konfiguracji Dockera i początkowych tabel bazy
+[33maadddcc[m Merge pull request #1 from Witos22/feature/logowanie
+[33mdea5fcd[m Dodano README
+[33mfccb117[m Pierwszy commit - start projektu backendowego (Spring Boot)
