@@ -8,6 +8,7 @@ import com.dom.irk_Backend.repository.RecruitmentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -56,6 +57,11 @@ public class RecruitmentService {
 
         // 3. Zapisujemy zaktualizowany obiekt do bazy
         return recruitmentRepository.save(recruitment);
+    }
+
+    public List<Recruitment> getActiveRecruitments() {
+        LocalDate today = LocalDate.now();
+        return recruitmentRepository.findByIsActiveTrueAndEndDateGreaterThanEqual(today);
     }
 
     public void deleteRecruitment(Integer id) {

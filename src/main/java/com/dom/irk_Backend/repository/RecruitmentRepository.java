@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface RecruitmentRepository extends JpaRepository<Recruitment, Integer>{
     List<Recruitment> findByEndDateBeforeAndIsActiveTrue(LocalDate date);
+    List<Recruitment> findByIsActiveTrueAndEndDateGreaterThanEqual(LocalDate today);
 }
