@@ -3,6 +3,7 @@ package com.dom.irk_Backend.service;
 import com.dom.irk_Backend.model.*;
 import com.dom.irk_Backend.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -97,6 +98,7 @@ public class ApplicationService {
         return applicationRepository.save(application);
     }
 
+    @Transactional
     public void processRecruitmentResults(Integer recruitmentId) {
         Recruitment recruitment = recruitmentRepository.findById(recruitmentId)
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono rekrutacji."));
@@ -112,7 +114,7 @@ public class ApplicationService {
         List<Application> applications = applicationRepository.findByRecruitmentId(recruitmentId);
 
         if (!applications.isEmpty()) {
-            // 2. Sortujemy kandydatów malejące po punktach
+            // 2. Sortujemy kandydatów malejąco po punktach
             applications.sort((a1, a2) -> Integer.compare(a2.getPoints(), a1.getPoints()));
 
             // 3. Rozdajemy statusy na podstawie limitu miejsc
