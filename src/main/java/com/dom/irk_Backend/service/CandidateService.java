@@ -28,6 +28,7 @@ public class CandidateService {
         String rawPassword = newCandidate.getPasswordHash();
         String encodedPassword = passwordEncoder.encode(rawPassword);
         newCandidate.setPasswordHash(encodedPassword);
+        newCandidate.setRole("CANDIDATE");
 
         return candidateRepository.save(newCandidate);
     }
