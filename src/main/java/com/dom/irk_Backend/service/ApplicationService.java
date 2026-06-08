@@ -4,8 +4,10 @@ import com.dom.irk_Backend.model.*;
 import com.dom.irk_Backend.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.dom.irk_Backend.repository.DocumentRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,15 +17,18 @@ public class ApplicationService {
     private final CandidateRepository candidateRepository;
     private final RecruitmentRepository recruitmentRepository;
     private final CandidateResultRepository resultRepository;
+    private final DocumentRepository documentRepository;
 
     public ApplicationService(ApplicationRepository applicationRepository,
                               CandidateRepository candidateRepository,
                               RecruitmentRepository recruitmentRepository,
-                              CandidateResultRepository resultRepository) {
+                              CandidateResultRepository resultRepository,
+                              DocumentRepository documentRepository) {
         this.applicationRepository = applicationRepository;
         this.candidateRepository = candidateRepository;
         this.recruitmentRepository = recruitmentRepository;
         this.resultRepository = resultRepository;
+        this.documentRepository = documentRepository;
     }
 
     public Application applyForRecruitment(String candidateEmail, Integer recruitmentId) {
@@ -88,13 +93,32 @@ public class ApplicationService {
 
         int finalScore = (int) Math.round(totalBasePoints + maxExtendedPoints);
 
-        // 4. Tworzymy aplikację i zapisujemy do bazy
         Application application = new Application();
         application.setCandidate(candidate);
         application.setRecruitment(recruitment);
         application.setStatus("ZŁOŻONA");
         application.setPoints(finalScore);
 
+        // 5. Tworzymy dokumenty i przypisujemy je do aplikacji
+        List<Document> documents = new ArrayList<>();
+        String[] requiredDocuments = {
+                "Świadectwo maturalne",
+                "Świadectwo ukończenia szkoły średniej",
+                "Zdjęcie legitymacyjne"
+        };
+
+        for (String docName : requiredDocuments) {
+            Document doc = new Document();
+            doc.setDocumentName(docName);
+            doc.setStatus("Niedostarczone");
+            doc.setApplication(application); // Spinamy dokument z aplikacją
+            documents.add(doc);
+        }
+
+        // Spinamy aplikację z listą dokumentów
+        application.setDocuments(documents);
+
+        // 6. Zapisujemy wszystko
         return applicationRepository.save(application);
     }
 
