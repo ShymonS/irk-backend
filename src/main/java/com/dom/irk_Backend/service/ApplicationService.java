@@ -133,25 +133,31 @@ public class ApplicationService {
         }
 
         int limit = course.getPlacesLimit();
+        int reserveLimit = (int) Math.ceil(limit * 0.5); // Kolejne 50% miejsc na listę rezerwową
 
         // 1. Pobieramy wszystkie aplikacje dla tej rekrutacji
         List<Application> applications = applicationRepository.findByRecruitmentId(recruitmentId);
 
         if (!applications.isEmpty()) {
-            // 2. Sortujemy kandydatów malejąco po punktach
-            applications.sort((a1, a2) -> Integer.compare(a2.getPoints(), a1.getPoints()));
+            // 2. Sortujemy kandydatów malejąco po punktach (zabezpieczenie przed null)
+            applications.sort((a1, a2) -> Integer.compare(
+                    a2.getPoints() != null ? a2.getPoints() : 0,
+                    a1.getPoints() != null ? a1.getPoints() : 0
+            ));
 
-            // 3. Rozdajemy statusy na podstawie limitu miejsc
+            // 3. Rozdajemy statusy na podstawie limitu miejsc i 50% puli rezerwowej
             for (int i = 0; i < applications.size(); i++) {
                 Application app = applications.get(i);
 
-                // Jeśli indeks kandydata jest mniejszy niż limit -> Zakwalifikowany
                 if (i < limit) {
                     app.setStatus("ZAKWALIFIKOWANY");
-                } else {
+                } else if (i < limit + reserveLimit) {
                     app.setStatus("LISTA REZERWOWA");
+                } else {
+                    app.setStatus("ODRZUCONY");
                 }
             }
+
             // Zapisujemy zaktualizowane statusy kandydatów
             applicationRepository.saveAll(applications);
         }
