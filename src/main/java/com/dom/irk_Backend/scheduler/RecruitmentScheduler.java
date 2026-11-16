@@ -20,13 +20,14 @@ public class RecruitmentScheduler {
         this.applicationService = applicationService;
     }
 
-    @Scheduled(cron = "0 0 1 * * ?")
+    //@Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(fixedRate = 15000)
     public void processEndedRecruitmentsAutomatically() {
         System.out.println("Uruchamiam nocny algorytm zamykania rekrutacji...");
 
         LocalDate today = LocalDate.now();
 
-        // Szukamy rekrutacji, które powinny się już zamknąć (endDate było wczoraj lub wcześniej) i są wciąż IsActive=true
+        // Szukamy rekrutacji, które powinny się już zamknąć
         List<Recruitment> recruitmentsToProcess = recruitmentRepository.findByEndDateBeforeAndIsActiveTrue(today);
 
         for (Recruitment rec : recruitmentsToProcess) {
